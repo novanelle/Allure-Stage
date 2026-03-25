@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Spatial Concert Experience</title>
+    <meta name="description" content="Premium Apple Vision Pro–style spatial interface">
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.2.0/dist/aframe-extras.min.js"></script>
+    <script src="./js/ui/ui-engine.js"></script>
+    <script src="./js/environment/arena.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <a-scene webxr="requiredFeatures: hand-tracking, local-floor;"
+        renderer="antialias: true; colorManagement: true; exposure: 1.0; shadowMapEnabled: true;"
+        cursor="rayOrigin: mouse" raycaster="objects: .raycastable">
+
+        <a-assets>
+            <img id="nav-search" src="https://img.icons8.com/ios-filled/50/ffffff/search.png">
+            <img id="nav-settings" src="https://img.icons8.com/ios-filled/50/ffffff/settings.png">
+        </a-assets>
+
+        <!-- REFINED LIGHTING SYSTEM -->
+        <a-entity light="type: ambient; intensity: 0.15; color: #222"></a-entity>
+
+        <!-- Main Stage Atmosphere -->
+        <a-entity id="stage-atmosphere" position="0 5 -20">
+            <a-entity light="type: point; intensity: 1.2; distance: 40; color: #4466ff"></a-entity>
+            <a-entity light="type: spot; intensity: 2.0; angle: 60; penumbra: 0.5; color: #8844ff" position="10 15 -10"
+                rotation="-45 -30 0"></a-entity>
+            <a-entity light="type: spot; intensity: 2.0; angle: 60; penumbra: 0.5; color: #44aaff" position="-10 15 -10"
+                rotation="-45 30 0"></a-entity>
+        </a-entity>
+
+        <!-- ENVIRONMENT -->
+        <a-entity
+            environment="preset: foc; groundColor: #020202; grid: none; dressingAmount: 0; skyType: color; skyColor: #000000; fog: 0"
+            concert-arena></a-entity>
+
+        <!-- STAGE STRUCTURE -->
+        <a-entity id="stage-group" position="0 0 -30">
+            <!-- Main Stage Floor -->
+            <a-box width="40" height="0.5" depth="15" color="#050505" material="roughness: 0.9"></a-box>
+            <!-- Back Backdrop -->
+            <a-plane width="35" height="15" position="0 7.5 -7.4" material="shader: flat; color: #020205"></a-plane>
+            <!-- Subtle Stage Glow -->
+            <a-plane width="30" height="0.2" position="0 0.26 0"
+                material="shader: flat; color: #4466ff; emissive: #4466ff; emissiveIntensity: 2"></a-plane>
+        </a-entity>
+
+        <!-- UI SYSTEM -->
+        <a-entity id="ui-container" ui-layout position="0 1.6 0">
+            <!-- 0: TOP NAVIGATION BAR -->
+            <a-entity id="top-nav" glass-panel="width: 1.8; height: 0.18; rounded: true; specular: true">
+                <a-entity position="0 0 0.02">
+                    <a-text value="Main Stage" align="center" width="1.2" position="-0.55 0 0" color="#fff"></a-text>
+                    <a-text value="Lineup" align="center" width="1.2" position="-0.2 0 0" color="#888"></a-text>
+                    <a-text value="VIP Lounge" align="center" width="1.2" position="0.2 0 0" color="#888"></a-text>
+
+                    <!-- Search Icon -->
+                    <a-image src="#nav-search" width="0.06" height="0.06" position="0.55 0.01 0"
+                        opacity="0.6"></a-image>
+                    <!-- Settings Icon -->
+                    <a-image src="#nav-settings" width="0.06" height="0.06" position="0.68 0.01 0"
+                        opacity="0.6"></a-image>
+
+                    <!-- Active Indicator -->
+                    <a-plane width="0.25" height="0.01" color="#fff" position="-0.55 -0.06 0.01"
+                        material="opacity: 0.8"></a-plane>
+                </a-entity>
+            </a-entity>
+
+            <!-- 1: CENTER PANEL (MAIN FOCUS) -->
+            <a-entity id="center-panel" glass-panel="width: 1.8; height: 1.0; specular: true">
+                <a-entity position="0 0.1 0.05">
+                    <a-text value="NOW PLAYING" align="center" width="1.2" position="0 0.35 0" color="#ffffff"
+                        opacity="0.5"></a-text>
+                    <a-text value="LIVE EVENT" align="center" width="1.0" position="0 0.28 0" color="#44aaff"
+                        opacity="0.8"></a-text>
+
+                    <a-text value="Justin Bieber" align="center" width="3.5" position="0 0.1 0" color="#fff"></a-text>
+                    <a-text value="bf" align="center" width="4.5" position="0 -0.1 0" color="#fff"></a-text>
+
+                    <a-text value="Time: 21:30 - 22:45" align="center" width="1.5" position="0 -0.32 0"
+                        color="#aaa"></a-text>
+                </a-entity>
+            </a-entity>
+
+            <!-- 2: LEFT PANEL (LIVE CHAT) -->
+            <a-entity id="left-panel" glass-panel="width: 1.1; height: 1.3; header: Chat; specular: true">
+                <a-entity position="0 0 0.02">
+                    <!-- Messages -->
+                    <a-entity position="-0.4 0.35 0">
+                        <a-text value="Sarah: This is insane" width="1.8" position="0 0 0" color="#fff"></a-text>
+                        <a-text value="Mike: Can't believe it's live" width="1.8" position="0 -0.15 0"
+                            color="#fff"></a-text>
+                        <a-text value="Alex: Amazing vibes!" width="1.8" position="0 -0.3 0" color="#fff"></a-text>
+                        <a-text value="Elena: The lighting is perfect" width="1.8" position="0 -0.45 0"
+                            color="#ddd"></a-text>
+                    </a-entity>
+
+                    <!-- Input Field -->
+                    <a-entity position="0 -0.5 0">
+                        <a-plane width="0.9" height="0.12" color="#111"
+                            material="opacity: 0.5; rounded: 0.02"></a-plane>
+                        <a-text value="Say something..." align="center" width="1.2" position="0 0 0.01"
+                            color="#666"></a-text>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+
+            <!-- 3: RIGHT PANEL (NEXT UP) -->
+            <a-entity id="right-panel" glass-panel="width: 1.1; height: 1.3; header: NEXT UP; specular: true">
+                <a-entity position="0 0.15 0.02">
+                    <!-- Card 1 -->
+                    <a-entity position="0 0.15 0">
+                        <a-plane width="0.95" height="0.22" color="#fff" material="opacity: 0.05"
+                            class="raycastable"></a-plane>
+                        <a-text value="Sorry" width="2.2" position="-0.4 0.03 0.01" color="#fff"></a-text>
+                        <a-text value="23:00" width="1.4" position="0.2 0.03 0.01" color="#aaa"></a-text>
+                    </a-entity>
+
+                    <!-- Card 2 -->
+                    <a-entity position="0 -0.15 0">
+                        <a-plane width="0.95" height="0.22" color="#fff" material="opacity: 0.05"
+                            class="raycastable"></a-plane>
+                        <a-text value="Love Yourself" width="2.2" position="-0.4 0.03 0.01" color="#fff"></a-text>
+                        <a-text value="00:30" width="1.4" position="0.2 0.03 0.01" color="#aaa"></a-text>
+                    </a-entity>
+
+                    <!-- Card 3 (Hover State) -->
+                    <a-entity position="0 -0.45 0">
+                        <a-plane width="0.95" height="0.22" color="#fff" material="opacity: 0.15"
+                            class="raycastable"></a-plane>
+                        <a-text value="Boyfriend" width="2.2" position="-0.4 0.03 0.01" color="#fff"></a-text>
+                        <a-text value="next" width="1.4" position="0.2 0.03 0.01" color="#44aaff"></a-text>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+
+            <!-- 4: BOTTOM DOCK -->
+            <a-entity id="bottom-dock" glass-panel="width: 1.2; height: 0.22; rounded: true; specular: true">
+                <a-entity position="0 0 0.05">
+                    <a-entity position="-0.4 0 0" class="raycastable">
+                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
+                        <a-text value="Menu" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    </a-entity>
+                    <a-entity position="-0.13 0 0" class="raycastable">
+                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
+                        <a-text value="Map" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    </a-entity>
+                    <a-entity position="0.13 0 0" class="raycastable">
+                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
+                        <a-text value="Friends" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    </a-entity>
+                    <a-entity position="0.4 0 0" class="raycastable">
+                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
+                        <a-text value="Chat" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+        </a-entity>
+
+        <!-- RIG & CAMERA -->
+        <a-entity id="rig" position="0 0 0">
+            <a-camera position="0 1.6 0" fov="75" look-controls="pointerLockEnabled: false">
+                <a-cursor color="#fff" radius="0.01" opacity="0.5"></a-cursor>
+            </a-camera>
+
+            <a-entity hand-tracking-controls="hand: left"></a-entity>
+            <a-entity hand-tracking-controls="hand: right"></a-entity>
+        </a-entity>
+
+    </a-scene>
+</body>
+
+</html>
