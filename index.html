@@ -20,6 +20,24 @@
 </head>
 
 <body>
+    <!-- SPLASH SCREEN TEMPORARILY DISABLED
+    <div id="splash-screen"
+        style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s;">
+        <p style="font-family: Arial, sans-serif; font-size: 24px; color: #555; margin-bottom: 20px;">POWERED BY</p>
+        <img src="./icons and images/Scotiabank-Logo.png" style="max-width: 300px;">
+    </div>
+    <script>
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            if(splash) {
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 1000);
+            }
+        }, 2000);
+    </script>
+    -->
     <a-scene webxr="requiredFeatures: hand-tracking, local-floor;"
         renderer="antialias: true; colorManagement: true; exposure: 1.0; shadowMapEnabled: true;"
         cursor="rayOrigin: mouse" raycaster="objects: .raycastable">
@@ -27,6 +45,10 @@
         <a-assets>
             <img id="nav-search" src="https://img.icons8.com/ios-filled/50/ffffff/search.png">
             <img id="nav-settings" src="https://img.icons8.com/ios-filled/50/ffffff/settings.png">
+            <img id="icon-menu" src="./icons and images/menu-icon.png">
+            <img id="icon-" src="./icons and images/lyrics icon.png">
+            <img id="icon-friends" src="./icons and images/friends icon.png">
+            <img id="icon-message" src="./icons and images/message icon.png">
         </a-assets>
 
         <!-- REFINED LIGHTING SYSTEM -->
@@ -34,10 +56,10 @@
 
         <!-- Main Stage Atmosphere -->
         <a-entity id="stage-atmosphere" position="0 5 -20">
-            <a-entity light="type: point; intensity: 1.2; distance: 40; color: #4466ff"></a-entity>
-            <a-entity light="type: spot; intensity: 2.0; angle: 60; penumbra: 0.5; color: #8844ff" position="10 15 -10"
+            <a-entity light="type: point; intensity: 1.2; distance: 40; color: #008cff"></a-entity>
+            <a-entity light="type: spot; intensity: 2.0; angle: 60; penumbra: 0.5; color: #cb6ce6" position="10 15 -10"
                 rotation="-45 -30 0"></a-entity>
-            <a-entity light="type: spot; intensity: 2.0; angle: 60; penumbra: 0.5; color: #44aaff" position="-10 15 -10"
+            <a-entity light="type: spot; intensity: 2.0; angle: 60; penumbra: 0.5; color: #e41962" position="-10 15 -10"
                 rotation="-45 30 0"></a-entity>
         </a-entity>
 
@@ -54,117 +76,267 @@
             <a-plane width="35" height="15" position="0 7.5 -7.4" material="shader: flat; color: #020205"></a-plane>
             <!-- Subtle Stage Glow -->
             <a-plane width="30" height="0.2" position="0 0.26 0"
-                material="shader: flat; color: #4466ff; emissive: #4466ff; emissiveIntensity: 2"></a-plane>
+                material="shader: flat; color: #008cff; emissive: #008cff; emissiveIntensity: 2"></a-plane>
         </a-entity>
 
         <!-- UI SYSTEM -->
         <a-entity id="ui-container" ui-layout position="0 1.6 0">
-            <!-- 0: TOP NAVIGATION BAR -->
-            <a-entity id="top-nav" glass-panel="width: 1.8; height: 0.18; rounded: true; specular: true">
+            <!-- WAIT TIMES (TOP OF SCREEN) -->
+            <a-entity id="wait-times-panel" glass-panel="width: 2.4; height: 0.12" position="0 1.05 -2.3"
+                rotation="10 0 0">
                 <a-entity position="0 0 0.02">
-                    <a-text value="Main Stage" align="center" width="1.2" position="-0.55 0 0" color="#fff"></a-text>
-                    <a-text value="Lineup" align="center" width="1.2" position="-0.2 0 0" color="#888"></a-text>
-                    <a-text value="VIP Lounge" align="center" width="1.2" position="0.2 0 0" color="#888"></a-text>
+                    <a-text value="WAIT TIMES" align="center" width="1.2" position="-0.9 0 0" color="#888888"
+                        font="roboto"></a-text>
+                    <a-text value="Bathrooms: 5m" align="center" width="1.1" position="-0.4 0 0" color="#ffffff"
+                        font="roboto"></a-text>
+                    <a-text value="Food: 12m" align="center" width="1.1" position="0.1 0 0" color="#ffffff"
+                        font="roboto"></a-text>
+                    <a-text value="Merch: 20m" align="center" width="1.1" position="0.6 0 0" color="#ffffff"
+                        font="roboto"></a-text>
+                </a-entity>
+            </a-entity>
 
+            <!-- 0: TOP NAVIGATION BAR -->
+            <a-entity id="top-nav" glass-panel="width: 2.4; height: 0.18">
+                <a-entity position="0 0 0.02">
+                    <a-text value="Main Stage" align="center" width="1.2" position="-0.8 0 0" color="#ffffff"
+                        font="roboto"></a-text>
+                    <a-entity position="-0.4 0 0" class="raycastable" map-trigger
+                        geometry="primitive: plane; width: 0.3; height: 0.15" material="opacity: 0">
+                        <a-text value="Map" align="center" width="1.2" position="0 0 0.01" color="#0096FF"
+                            font="roboto"></a-text>
+                    </a-entity>
+                    <a-entity position="0.0 0 0" class="raycastable" merch-trigger
+                        geometry="primitive: plane; width: 0.3; height: 0.15" material="opacity: 0">
+                        <a-text value="Merch" align="center" width="1.2" position="0 0 0.01" color="#aaaaaa"
+                            font="roboto"></a-text>
+                    </a-entity>
+                    <a-text value="Lineup" align="center" width="1.2" position="0.4 0 0" color="#aaaaaa"
+                        font="roboto"></a-text>
+                    <a-text value="VIP Lounge" align="center" width="1.2" position="0.8 0 0" color="#aaaaaa"
+                        font="roboto"></a-text>
                     <!-- Search Icon -->
-                    <a-image src="#nav-search" width="0.06" height="0.06" position="0.55 0.01 0"
-                        opacity="0.6"></a-image>
+                    <a-image src="#nav-search" width="0.06" height="0.06" position="1.1 0.01 0" opacity="0.8"
+                        color="#ffffff"></a-image>
                     <!-- Settings Icon -->
-                    <a-image src="#nav-settings" width="0.06" height="0.06" position="0.68 0.01 0"
-                        opacity="0.6"></a-image>
-
-                    <!-- Active Indicator -->
-                    <a-plane width="0.25" height="0.01" color="#fff" position="-0.55 -0.06 0.01"
-                        material="opacity: 0.8"></a-plane>
+                    <a-image src="#nav-settings" width="0.06" height="0.06" position="1.25 0.01 0" opacity="0.8"
+                        color="#ffffff"></a-image>
+                    <!-- Clean minimal active indicator -->
+                    <a-text value="." align="center" width="2" position="-0.8 -0.06 0.01" color="#1db954"
+                        font="roboto"></a-text>
                 </a-entity>
             </a-entity>
 
             <!-- 1: CENTER PANEL (MAIN FOCUS) -->
-            <a-entity id="center-panel" glass-panel="width: 1.8; height: 1.0; specular: true">
+            <a-entity id="center-panel" glass-panel="width: 1.8; height: 1.0">
                 <a-entity position="0 0.1 0.05">
-                    <a-text value="NOW PLAYING" align="center" width="1.2" position="0 0.35 0" color="#ffffff"
-                        opacity="0.5"></a-text>
-                    <a-text value="LIVE EVENT" align="center" width="1.0" position="0 0.28 0" color="#44aaff"
-                        opacity="0.8"></a-text>
+                    <a-text value="NOW PLAYING" align="center" width="1.2" position="0 0.35 0" color="#dddddd"
+                        font="roboto"></a-text>
+                    <a-text value="LIVE EVENT" align="center" width="1.0" position="0 0.28 0" color="#e41962"
+                        font="roboto"></a-text>
 
-                    <a-text value="Justin Bieber" align="center" width="3.5" position="0 0.1 0" color="#fff"></a-text>
-                    <a-text value="bf" align="center" width="4.5" position="0 -0.1 0" color="#fff"></a-text>
+                    <a-text value="Justin Bieber" align="center" width="3.5" position="0 0.1 0" color="#ffffff"
+                        font="roboto"></a-text>
+                    <a-text value="Baby" align="center" width="4.5" position="0 -0.1 0" color="#ffffff"
+                        font="roboto"></a-text>
 
-                    <a-text value="Time: 21:30 - 22:45" align="center" width="1.5" position="0 -0.32 0"
-                        color="#aaa"></a-text>
+                    <a-text value="0:13 - 3:20" align="center" width="1.5" position="0 -0.32 0" color="#cccccc"
+                        font="roboto"></a-text>
+                </a-entity>
+            </a-entity>
+
+            <!-- MAP PANEL (POPUP) -->
+            <a-entity id="map-panel" glass-panel="width: 1.6; height: 1.6; header: Arena Stadium Map; specular: true"
+                position="0 0 -2.0" visible="false" scale="0 0 0"
+                animation__show="property: scale; from: 0 0 0; to: 1 1 1; dur: 300; easing: easeOutBack; startEvents: show-map"
+                animation__hide="property: scale; from: 1 1 1; to: 0 0 0; dur: 200; easing: easeInBack; startEvents: hide-map">
+                <a-entity position="0 0 0.02">
+                    <a-image src="./icons and images/stadium_map.png" width="1.4" height="1.2"
+                        position="0 -0.1 0"></a-image>
+                </a-entity>
+            </a-entity>
+
+            <!-- MERCH PANEL (POPUP) -->
+            <a-entity id="merch-panel" glass-panel="width: 2.8; height: 1.6; header: Bieber Tour Merchandise"
+                position="0 0 -1.9" visible="false" scale="0 0 0"
+                animation__show="property: scale; from: 0 0 0; to: 1 1 1; dur: 300; easing: easeOutBack; startEvents: show-merch"
+                animation__hide="property: scale; from: 1 1 1; to: 0 0 0; dur: 200; easing: easeInBack; startEvents: hide-merch">
+                <a-entity position="0 0 0.02">
+                    <!-- Row 1 -->
+                    <a-entity position="-0.85 0.22 0">
+                        <a-plane width="0.75" height="0.6" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/JB Hoodie 1.png" width="0.4" height="0.4"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="JB Concept Hoodie" align="center" width="1.2" position="0 -0.18 0.01"
+                            color="#ffffff" font="roboto"></a-text>
+                        <a-text value="$65 | Qty: 42" align="center" width="1.1" position="0 -0.24 0.01" color="#0096FF"
+                            font="roboto"></a-text>
+                    </a-entity>
+                    <a-entity position="0 0.22 0">
+                        <a-plane width="0.75" height="0.6" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/JB Shirt1.png" width="0.4" height="0.4"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="MRS BIEBER T-SHIRT" align="center" width="1.2" position="0 -0.18 0.01"
+                            color="#ffffff" font="roboto"></a-text>
+                        <a-text value="$35 | Qty: 156" align="center" width="1.1" position="0 -0.24 0.01"
+                            color="#0096FF" font="roboto"></a-text>
+                    </a-entity>
+                    <a-entity position="0.85 0.22 0">
+                        <a-plane width="0.75" height="0.6" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/JB shirt2.png" width="0.4" height="0.4"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="Peaches Orange Crop T-Shirt" align="center" width="1.2" position="0 -0.18 0.01"
+                            color="#ffffff" font="roboto"></a-text>
+                        <a-text value="$35 | Qty: SOLD OUT" align="center" width="1.1" position="0 -0.24 0.01"
+                            color="#D10003" font="roboto"></a-text>
+                    </a-entity>
+
+                    <!-- Row 2 -->
+                    <a-entity position="-0.95 -0.4 0">
+                        <a-plane width="0.55" height="0.5" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/jb hat.png" width="0.3" height="0.3"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="JB Cross Dad Hat" align="center" width="1.1" position="0 -0.15 0.01"
+                            color="#ffffff" font="roboto"></a-text>
+                        <a-text value="$25 | Qty: 8" align="center" width="1.0" position="0 -0.21 0.01" color="#0096FF"
+                            font="roboto"></a-text>
+                    </a-entity>
+                    <a-entity position="-0.32 -0.4 0">
+                        <a-plane width="0.55" height="0.5" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/jb shorts.png" width="0.3" height="0.3"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="Peaches Green PE Shorts" align="center" width="1.1" position="0 -0.15 0.01"
+                            color="#ffffff" font="roboto"></a-text>
+                        <a-text value="$45 | Qty: 19" align="center" width="1.0" position="0 -0.21 0.01" color="#0096FF"
+                            font="roboto"></a-text>
+                    </a-entity>
+                    <a-entity position="0.32 -0.4 0">
+                        <a-plane width="0.55" height="0.5" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/JBCD.png" width="0.3" height="0.3"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="Swag CD" align="center" width="1.1" position="0 -0.15 0.01" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="$15 | Qty: 100+" align="center" width="1.0" position="0 -0.21 0.01"
+                            color="#0096FF" font="roboto"></a-text>
+                    </a-entity>
+                    <a-entity position="0.95 -0.4 0">
+                        <a-plane width="0.55" height="0.5" position="0 0 0.001" color="#111111" material="opacity: 0.95"
+                            class="raycastable"></a-plane>
+                        <a-image src="./icons and images/JBCD2.png" width="0.3" height="0.3"
+                            position="0 0.05 0.01"></a-image>
+                        <a-text value="Changes CD" align="center" width="1.1" position="0 -0.15 0.01" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="$15 | Qty: 34" align="center" width="1.0" position="0 -0.21 0.01" color="#0096FF"
+                            font="roboto"></a-text>
+                    </a-entity>
                 </a-entity>
             </a-entity>
 
             <!-- 2: LEFT PANEL (LIVE CHAT) -->
-            <a-entity id="left-panel" glass-panel="width: 1.1; height: 1.3; header: Chat; specular: true">
+            <a-entity id="left-panel" glass-panel="width: 1.1; height: 1.3; header: Chat; specular: true;"
+                visible="false" scale="0 0 0"
+                animation__show="property: scale; from: 0 0 0; to: 1 1 1; dur: 300; easing: easeOutBack; startEvents: show-chat"
+                animation__hide="property: scale; from: 1 1 1; to: 0 0 0; dur: 200; easing: easeInBack; startEvents: hide-chat">
                 <a-entity position="0 0 0.02">
                     <!-- Messages -->
                     <a-entity position="-0.4 0.35 0">
-                        <a-text value="Sarah: This is insane" width="1.8" position="0 0 0" color="#fff"></a-text>
-                        <a-text value="Mike: Can't believe it's live" width="1.8" position="0 -0.15 0"
-                            color="#fff"></a-text>
-                        <a-text value="Alex: Amazing vibes!" width="1.8" position="0 -0.3 0" color="#fff"></a-text>
-                        <a-text value="Elena: The lighting is perfect" width="1.8" position="0 -0.45 0"
-                            color="#ddd"></a-text>
+                        <a-text value="Sarah: Where's Hayley?" width="1.8" position="0 0 0" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="Mike: Can't believe I'm here!" width="1.8" position="0 -0.15 0" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="Alex: Amazing vibes!" width="1.8" position="0 -0.3 0" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="Elena: Hey Beliebers!" width="1.8" position="0 -0.45 0" color="#bbbbbb"
+                            font="roboto"></a-text>
                     </a-entity>
 
                     <!-- Input Field -->
                     <a-entity position="0 -0.5 0">
-                        <a-plane width="0.9" height="0.12" color="#111"
-                            material="opacity: 0.5; rounded: 0.02"></a-plane>
-                        <a-text value="Say something..." align="center" width="1.2" position="0 0 0.01"
-                            color="#666"></a-text>
+                        <a-plane width="0.9" height="0.12" color="#000000" material="opacity: 0.4"></a-plane>
+                        <a-text value="Say something..." align="center" width="1.2" position="0 0 0.01" color="#888888"
+                            font="roboto"></a-text>
                     </a-entity>
                 </a-entity>
             </a-entity>
 
+            <!-- LYRICS PANEL (Hidden by Default) -->
+            <a-entity id="lyrics-panel"
+                glass-panel="width: 1.1; height: 1.0; header: Lyrics; specular: true; borderColor: #e41962"
+                visible="false" position="-2.2 -0.2 -2.2" rotation="0 25 0" scale="0 0 0"
+                animation__show="property: scale; from: 0 0 0; to: 1 1 1; dur: 300; easing: easeOutBack; startEvents: show-lyrics"
+                animation__hide="property: scale; from: 1 1 1; to: 0 0 0; dur: 200; easing: easeInBack; startEvents: hide-lyrics">
+                <a-entity id="lyrics-content" position="0 0.15 0.02" spotify-lyrics></a-entity>
+            </a-entity>
+
             <!-- 3: RIGHT PANEL (NEXT UP) -->
-            <a-entity id="right-panel" glass-panel="width: 1.1; height: 1.3; header: NEXT UP; specular: true">
+            <a-entity id="right-panel" glass-panel="width: 1.1; height: 1.3; header: NEXT UP">
                 <a-entity position="0 0.15 0.02">
-                    <!-- Card 1 -->
-                    <a-entity position="0 0.15 0">
-                        <a-plane width="0.95" height="0.22" color="#fff" material="opacity: 0.05"
-                            class="raycastable"></a-plane>
-                        <a-text value="Sorry" width="2.2" position="-0.4 0.03 0.01" color="#fff"></a-text>
-                        <a-text value="23:00" width="1.4" position="0.2 0.03 0.01" color="#aaa"></a-text>
+                    <!-- Justin Bieber Card -->
+                    <a-entity position="0 0.25 0">
+                        <a-plane width="0.92" height="0.26" position="0 0 0.001" color="#111111"
+                            material="opacity: 0.95" class="raycastable"></a-plane>
+                        <a-plane width="0.18" height="0.18" position="-0.33 0 0.01" color="#444"></a-plane>
+                        <a-text value="Justin Bieber" width="1.6" position="-0.18 0.05 0.02" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="Peaches" width="2.2" position="-0.18 -0.05 0.02" color="#aaaaaa"
+                            font="roboto"></a-text>
                     </a-entity>
 
-                    <!-- Card 2 -->
-                    <a-entity position="0 -0.15 0">
-                        <a-plane width="0.95" height="0.22" color="#fff" material="opacity: 0.05"
-                            class="raycastable"></a-plane>
-                        <a-text value="Love Yourself" width="2.2" position="-0.4 0.03 0.01" color="#fff"></a-text>
-                        <a-text value="00:30" width="1.4" position="0.2 0.03 0.01" color="#aaa"></a-text>
+                    <!-- Justin Bieber Card -->
+                    <a-entity position="0 -0.05 0">
+                        <a-plane width="0.92" height="0.26" position="0 0 0.001" color="#111111"
+                            material="opacity: 0.95" class="raycastable"></a-plane>
+                        <a-plane width="0.18" height="0.18" position="-0.33 0 0.01" color="#333"></a-plane>
+                        <a-text value="Justin Bieber" width="1.6" position="-0.18 0.05 0.02" color="#ffffff"
+                            font="roboto"></a-text>
+                        <a-text value="Snooze" width="2.2" position="-0.18 -0.05 0.02" color="#aaaaaa"
+                            font="roboto"></a-text>
                     </a-entity>
 
-                    <!-- Card 3 (Hover State) -->
-                    <a-entity position="0 -0.45 0">
-                        <a-plane width="0.95" height="0.22" color="#fff" material="opacity: 0.15"
-                            class="raycastable"></a-plane>
-                        <a-text value="Boyfriend" width="2.2" position="-0.4 0.03 0.01" color="#fff"></a-text>
-                        <a-text value="next" width="1.4" position="0.2 0.03 0.01" color="#44aaff"></a-text>
+                    <!-- Upcoming State -->
+                    <a-entity position="0 -0.35 0">
+                        <a-plane width="0.92" height="0.26" position="0 0 0.001" color="#111111"
+                            material="opacity: 0.95" class="raycastable"></a-plane>
+                        <a-plane width="0.18" height="0.18" position="-0.33 0 0.01" color="#333"
+                            material="opacity: 0.3"></a-plane>
+                        <a-text value="Next Up" width="1.6" position="-0.18 0.05 0.02" color="#ffffff"
+                            font="roboto"></a-text>
                     </a-entity>
                 </a-entity>
             </a-entity>
 
             <!-- 4: BOTTOM DOCK -->
-            <a-entity id="bottom-dock" glass-panel="width: 1.2; height: 0.22; rounded: true; specular: true">
+            <a-entity id="bottom-dock" glass-panel="width: 1.2; height: 0.22">
                 <a-entity position="0 0 0.05">
-                    <a-entity position="-0.4 0 0" class="raycastable">
-                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
-                        <a-text value="Menu" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    <a-entity position="-0.4 0 0" class="raycastable"
+                        geometry="primitive: plane; width: 0.15; height: 0.15" material="opacity: 0; transparent: true">
+                        <a-image src="#icon-menu" width="0.08" height="0.08" position="0 0.02 0"></a-image>
+                        <a-text value="Menu" align="center" width="0.7" position="0 -0.05 0" color="#ffffff"
+                            font="roboto"></a-text>
                     </a-entity>
-                    <a-entity position="-0.13 0 0" class="raycastable">
-                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
-                        <a-text value="Map" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    <a-entity position="-0.13 0 0" class="raycastable" lyrics-trigger
+                        geometry="primitive: plane; width: 0.15; height: 0.15" material="opacity: 0; transparent: true">
+                        <a-image src="#icon-lyrics" width="0.08" height="0.08" position="0 0.02 0"></a-image>
+                        <a-text value="Lyrics" align="center" width="0.7" position="0 -0.05 0" color="#ffffff"
+                            font="roboto"></a-text>
                     </a-entity>
-                    <a-entity position="0.13 0 0" class="raycastable">
-                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
-                        <a-text value="Friends" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    <a-entity position="0.13 0 0" class="raycastable"
+                        geometry="primitive: plane; width: 0.15; height: 0.15" material="opacity: 0; transparent: true">
+                        <a-image src="#icon-friends" width="0.08" height="0.08" position="0 0.02 0"></a-image>
+                        <a-text value="Friends" align="center" width="0.7" position="0 -0.05 0" color="#ffffff"
+                            font="roboto"></a-text>
                     </a-entity>
-                    <a-entity position="0.4 0 0" class="raycastable">
-                        <a-circle radius="0.06" color="#fff" material="opacity: 0.1"></a-circle>
-                        <a-text value="Chat" align="center" width="0.7" position="0 -0.1 0" color="#aaa"></a-text>
+                    <a-entity position="0.4 0 0" class="raycastable" chat-trigger
+                        geometry="primitive: plane; width: 0.15; height: 0.15" material="opacity: 0; transparent: true">
+                        <a-image src="#icon-message" width="0.08" height="0.08" position="0 0.02 0"></a-image>
+                        <a-text value="Messages" align="center" width="0.7" position="0 -0.05 0" color="#ffffff"
+                            font="roboto"></a-text>
                     </a-entity>
                 </a-entity>
             </a-entity>
